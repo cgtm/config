@@ -7,8 +7,12 @@ if [ -f $(brew --prefix)/etc/bash_completion ]; then
   . $(brew --prefix)/etc/bash_completion
 fi
 
+# Grunt tab auto-completion
+eval "$(grunt --completion=bash)"
+
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 export GRADLE_HOME=/usr/local/bin/gradle;
+export GRADLE_OPTS="-Xmx1024m -Xms256m -XX:MaxPermSize=1024m -XX:+CMSClassUnloadingEnabled -XX:+HeapDumpOnOutOfMemoryError"
 
 alias ls='ls -alGF'
 alias ll='ls'
@@ -18,8 +22,13 @@ alias -- -='cd -'
 function cdd() { cd $1; ls; }
 alias cdls=cdd
 alias dcom='docker-compose'
+alias dcb='dcom build'
+alias dck='dcom kill'
+alias dcr='dcom rm'
+alias dcu='dcom up'
 alias dev='cd ~/dev'
-alias docom='docker-compose'
+alias localteamsite='NODE_ENV=local nodemon -w _src/sitepublisher/components/xsl-includes -e page,xsl,xml "./_express/teamsite/node-teamsite/node-teamsite.js"'
+alias lts='localteamsite'
 alias q='sublime'
 alias rootit='sudo $(history -p !!)'
 alias sbp='sourcebashprofile'
@@ -35,10 +44,13 @@ alias webdev='cd ~/dev/sal/loans-ui/service/src/main/webdev'
 alias g='git'
 alias gb='git branch'
 alias gba='git branch -a'
-# function gc() { git checkout "${@:-master}"; } # Checkout master by default
 function gc() { git checkout "${@:-develop}"; } # Checkout develop by default
 alias gcb='git checkout -b'
+alias gch='git checkout'
+alias gcp='git cherry-pick'
 alias gd='git diff'
+alias gdno='git diff --name-only'
+alias gfe='git fetch'
 alias gh='git help'
 alias gm='git merge'
 alias gpl='git pull'
@@ -47,6 +59,8 @@ alias gr='git remote'
 alias grso='git remote show origin'
 alias gruo='git remote update origin'
 alias gs='git status'
+alias gsh='git show'
+alias gt='git tag'
 
 
 # Git Flow
@@ -61,158 +75,158 @@ alias gfs='gf support'
 alias gfv='gf version'
 
 alias chkjava='ps -ef | grep java'
-alias uirebuild='~/dev/sal/loans-ui/rebuild.sh'
-alias freshBuild='START_TIME=$SECONDS; chkjava; read -p "Any key to continue; ctrl-c to quit." -n1 -s; killall java; clear; echo Killed off java processes.; echo Starting build ...; echo && buildSSOSProj && cleanSAL && buildSALProj && echo && echo Build took $((($SECONDS - $START_TIME) / 60)) minutes.'
+# alias uirebuild='~/dev/sal/loans-ui/rebuild.sh'
+# alias freshBuild='START_TIME=$SECONDS; chkjava; read -p "Any key to continue; ctrl-c to quit." -n1 -s; killall java; clear; echo Killed off java processes.; echo Starting build ...; echo && buildSSOSProj && cleanSAL && buildSALProj && echo && echo Build took $((($SECONDS - $START_TIME) / 60)) minutes.'
 
-function cleanIDEA() {
-	echo "Cleaning IDEA stuffs:";
-	echo "cd ~/dev/sal/loans-ui && gradle cleanIdea idea;";
-	cd ~/dev/sal/loans-ui && gradle cleanIdea idea &> /dev/null;
-	echo "Done.";
-	cd -;
-}
+# function cleanIDEA() {
+# 	echo "Cleaning IDEA stuffs:";
+# 	echo "cd ~/dev/sal/loans-ui && gradle cleanIdea idea;";
+# 	cd ~/dev/sal/loans-ui && gradle cleanIdea idea &> /dev/null;
+# 	echo "Done.";
+# 	cd -;
+# }
 
-function buildSSOSProj(){
+# function buildSSOSProj(){
 
-	echo;
-	echo "Building the SSOS projects (csso-stub, sso-service).";
-	echo;
-	cd ~/dev/ssos/;
+# 	echo;
+# 	echo "Building the SSOS projects (csso-stub, sso-service).";
+# 	echo;
+# 	cd ~/dev/ssos/;
 
-	# if [ $2 != '-s' ]; then
+# 	# if [ $2 != '-s' ]; then
 
-		echo;
-		echo "Cleaning …";
-		echo;
-    # if [ $1 = '-q' ]; then
-		# 	./fullClean.sh &> /dev/null  || { echo 'Clean failed.' ; return 1; }
-		# else
-			./fullClean.sh || { echo 'Clean failed' ; return 1; }
-  	# fi
+# 		echo;
+# 		echo "Cleaning …";
+# 		echo;
+#     # if [ $1 = '-q' ]; then
+# 		# 	./fullClean.sh &> /dev/null  || { echo 'Clean failed.' ; return 1; }
+# 		# else
+# 			./fullClean.sh || { echo 'Clean failed' ; return 1; }
+#   	# fi
 
-	# fi
+# 	# fi
 
-	echo;
-	echo;
-	echo "Building csso-stub";
-	echo;
- #    if [ $1 = '-q' ]; then
-	# 	./csso-stub/rebuild.sh &> /dev/null || { echo 'csso-stub build failed.' ; return 1; }
-	# else
-		./csso-stub/rebuild.sh || { echo 'csso-stub build failed.' ; return 1; }
-    # fi
+# 	echo;
+# 	echo;
+# 	echo "Building csso-stub";
+# 	echo;
+#  #    if [ $1 = '-q' ]; then
+# 	# 	./csso-stub/rebuild.sh &> /dev/null || { echo 'csso-stub build failed.' ; return 1; }
+# 	# else
+# 		./csso-stub/rebuild.sh || { echo 'csso-stub build failed.' ; return 1; }
+#     # fi
 
-	echo;
-	echo;
-	echo "Building sso-service";
-	echo;
- #    if [ $1 = '-q' ]; then
-	# 	./sso-service/rebuild.sh &> /dev/null || { echo 'sso-service build failed.' ; return 1; }
-	# else
-		./sso-service/rebuild.sh || { echo 'sso-service build failed' ; return 1; }
-    # fi
+# 	echo;
+# 	echo;
+# 	echo "Building sso-service";
+# 	echo;
+#  #    if [ $1 = '-q' ]; then
+# 	# 	./sso-service/rebuild.sh &> /dev/null || { echo 'sso-service build failed.' ; return 1; }
+# 	# else
+# 		./sso-service/rebuild.sh || { echo 'sso-service build failed' ; return 1; }
+#     # fi
 
-	echo;
-	echo "Done.";
-	echo;
-	cd -;
+# 	echo;
+# 	echo "Done.";
+# 	echo;
+# 	cd -;
 
-}
+# }
 
-function buildSALProj(){
+# function buildSALProj(){
 
-	echo;
-	echo "Building the SAL projects (tbsb-adapter, loans-tbsb-adapter, loans-ui).";
-	echo;
-	cd ~/dev/sal/;
+# 	echo;
+# 	echo "Building the SAL projects (tbsb-adapter, loans-tbsb-adapter, loans-ui).";
+# 	echo;
+# 	cd ~/dev/sal/;
 
-	echo;
-	echo "Cleaning …";
-	echo;
-	./fullClean.sh || { echo 'Clean failed' ; return 1; }
+# 	echo;
+# 	echo "Cleaning …";
+# 	echo;
+# 	./fullClean.sh || { echo 'Clean failed' ; return 1; }
 
-	echo;
-	echo;
-	echo "Building tbsb-adapter";
-	echo;
-	# ./tbsp-adapter/rebuild.sh || { echo 'tbspadapter build failed.' ; return 1; }
-	cd ~/dev/sal/;
-	./tbsb-adapter/rebuild.sh
+# 	echo;
+# 	echo;
+# 	echo "Building tbsb-adapter";
+# 	echo;
+# 	# ./tbsp-adapter/rebuild.sh || { echo 'tbspadapter build failed.' ; return 1; }
+# 	cd ~/dev/sal/;
+# 	./tbsb-adapter/rebuild.sh
 
-	echo;
-	echo;
-	echo "Building loans-tbsb-adapter";
-	echo;
-	# ./loans-tbsb-adapter/rebuild.sh || { echo 'loans-tbsb-adapter build failed' ; return 1; }
-	./loans-tbsb-adapter/rebuild.sh
+# 	echo;
+# 	echo;
+# 	echo "Building loans-tbsb-adapter";
+# 	echo;
+# 	# ./loans-tbsb-adapter/rebuild.sh || { echo 'loans-tbsb-adapter build failed' ; return 1; }
+# 	./loans-tbsb-adapter/rebuild.sh
 
-	echo;
-	echo;
-	echo "Building loans-ui";
-	echo;
-	# ./loans-ui/rebuild.sh || { echo 'loans-ui build failed' ; return 1; }
-	./loans-ui/rebuild.sh
+# 	echo;
+# 	echo;
+# 	echo "Building loans-ui";
+# 	echo;
+# 	# ./loans-ui/rebuild.sh || { echo 'loans-ui build failed' ; return 1; }
+# 	./loans-ui/rebuild.sh
 
-	echo;
-	echo "Done.";
-	echo;
-	echo;
-	cd -;
+# 	echo;
+# 	echo "Done.";
+# 	echo;
+# 	echo;
+# 	cd -;
 
-}
-
-
-function cleanSAL(){
-
-	echo;
-	echo;
-	echo "Cleaning SAL build.";
-	cd ~/dev/sal
-	find . -type d -name build | xargs rm -rf
-
-	cd metrics-ui
-	nice gradle clean
-
-	cd ../loans-ui
-	nice gradle clean
-
-	cd ../sv2-ui
-	nice gradle clean
-
-	cd ../tbsb-adapter
-	nice gradle clean
-
-	cd ..
-	rm -f */artefacts/*.jar */logs/*.log logs/*.log buildSrc/build/libs/buildSrc.jar
-
-}
+# }
 
 
-function buildEverything(){
-	# echo NO;
-	# return 0;
-	echo;
-	echo "Building everything (csso-stub, sso-service, tbsb-adapter, loans-tbsb-adapter, loans-ui).";
-	echo;
-	# buildSSOSProj -q;
+# function cleanSAL(){
 
-	cleanSAL;
+# 	echo;
+# 	echo;
+# 	echo "Cleaning SAL build.";
+# 	cd ~/dev/sal
+# 	find . -type d -name build | xargs rm -rf
 
-	buildSALProj -q -s;
-	echo;
-	echo;
-	echo "Done.";
-	echo;
-}
+# 	cd metrics-ui
+# 	nice gradle clean
 
-function foo() {
-    echo "Parameter #1 is $1";
-    echo "Parameter #2 is $2";
-    echo "Parameter #3 is $3";
-    if [ $1 = '-v' ]; then
-    	echo "It'll be a miracle if this works!";
-    fi
-}
+# 	cd ../loans-ui
+# 	nice gradle clean
+
+# 	cd ../sv2-ui
+# 	nice gradle clean
+
+# 	cd ../tbsb-adapter
+# 	nice gradle clean
+
+# 	cd ..
+# 	rm -f */artefacts/*.jar */logs/*.log logs/*.log buildSrc/build/libs/buildSrc.jar
+
+# }
+
+
+# function buildEverything(){
+# 	# echo NO;
+# 	# return 0;
+# 	echo;
+# 	echo "Building everything (csso-stub, sso-service, tbsb-adapter, loans-tbsb-adapter, loans-ui).";
+# 	echo;
+# 	# buildSSOSProj -q;
+
+# 	cleanSAL;
+
+# 	buildSALProj -q -s;
+# 	echo;
+# 	echo;
+# 	echo "Done.";
+# 	echo;
+# }
+
+# function foo() {
+#     echo "Parameter #1 is $1";
+#     echo "Parameter #2 is $2";
+#     echo "Parameter #3 is $3";
+#     if [ $1 = '-v' ]; then
+#     	echo "It'll be a miracle if this works!";
+#     fi
+# }
 
 # Create a new directory and enter it
 function md() {
